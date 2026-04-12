@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FFFBF7;
+  color: #1E1A16;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-primary text-white font-semibold rounded-2xl px-8 py-4 text-base
+    shadow-warm hover:bg-brand-primary-dark active:scale-[0.97]
+    transition-all duration-200 cursor-pointer select-none;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-brand-primary font-semibold rounded-2xl px-8 py-4 text-base
+    border-2 border-brand-border hover:border-brand-primary hover:bg-brand-primary-light
+    active:scale-[0.97] transition-all duration-200 cursor-pointer select-none;
+  }
+
+  .btn-ghost {
+    @apply text-brand-muted font-medium rounded-2xl px-6 py-3 text-sm
+    hover:text-brand-text hover:bg-brand-surface
+    active:scale-[0.97] transition-all duration-200 cursor-pointer select-none;
+  }
+
+  .card {
+    @apply bg-white rounded-3xl shadow-card border border-brand-border/50;
+  }
+
+  .section-pad {
+    @apply px-5 py-16 md:px-8 md:py-24;
+  }
+
+  .label-field {
+    @apply block text-sm font-semibold text-brand-text mb-2;
+  }
+
+  .input-field {
+    @apply w-full bg-brand-surface border-2 border-brand-border rounded-2xl px-4 py-3.5
+    text-brand-text placeholder:text-brand-muted/60 text-base
+    focus:outline-none focus:border-brand-primary focus:bg-white
+    transition-all duration-200;
+  }
+
+  .textarea-field {
+    @apply input-field resize-none min-h-[120px];
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #E8633A 0%, #F9C846 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-cool {
+    background: linear-gradient(135deg, #E8633A 0%, #3ABDE8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-warm {
+    background: linear-gradient(135deg, #E8633A 0%, #F9C846 100%);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.waveform-bar {
+  display: inline-block;
+  width: 3px;
+  border-radius: 2px;
+  background: #E8633A;
+  animation: waveform 1.2s ease-in-out infinite;
+}
+
+@keyframes waveform {
+  0%, 100% { height: 6px; opacity: 0.4; }
+  50% { height: 22px; opacity: 1; }
+}
+
+.waveform-bar:nth-child(1) { animation-delay: 0s; }
+.waveform-bar:nth-child(2) { animation-delay: 0.1s; }
+.waveform-bar:nth-child(3) { animation-delay: 0.2s; }
+.waveform-bar:nth-child(4) { animation-delay: 0.3s; }
+.waveform-bar:nth-child(5) { animation-delay: 0.15s; }
+.waveform-bar:nth-child(6) { animation-delay: 0.05s; }
+.waveform-bar:nth-child(7) { animation-delay: 0.25s; }
+.waveform-bar:nth-child(8) { animation-delay: 0.35s; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #FFF5EE 25%, #FDEEE8 50%, #FFF5EE 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
