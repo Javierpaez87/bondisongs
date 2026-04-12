@@ -1,6 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
+const mockInsert = async (data: Record<string, unknown>) => {
+  console.log('[mock] song_requests insert:', data);
+  await new Promise(res => setTimeout(res, 1200));
+  return { error: null };
+};
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = {
+  from: (_table: string) => ({
+    insert: (data: Record<string, unknown>) => mockInsert(data),
+  }),
+};
