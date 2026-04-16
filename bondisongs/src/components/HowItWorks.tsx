@@ -12,14 +12,20 @@ const STEPS = [
     desc: 'Nuestro equipo compone una canción única, hecha a medida con todo lo que nos contaste.',
   },
   {
-    icon: '💬',
+    icon: '💳',
     number: '03',
+    title: '¡Pagás una vez que ves que el resultado te gusta!',
+    desc: 'Escuchás el preview completo antes de pagar. Si no te encanta, no pagás nada.',
+  },
+  {
+    icon: '💬',
+    number: '04',
     title: 'Te enviamos el link por WhatsApp',
     desc: 'Recibís un link privado para escuchar un preview. Podés compartirlo con quien quieras.',
   },
   {
     icon: '⬇️',
-    number: '04',
+    number: '05',
     title: 'La descargás y la guardás para siempre',
     desc: 'Una vez que la confirmás, descargás la canción completa en alta calidad.',
   },
@@ -37,7 +43,7 @@ export default function HowItWorks() {
             Simple, rápido y muy especial
           </h2>
           <p className="text-brand-muted">
-            No hace falta escribir mucho. Con cuatro pasos ya está.
+            No hace falta escribir mucho. Con cinco pasos ya está.
           </p>
         </div>
 

@@ -23,7 +23,7 @@ export default function App() {
     <>
       {state === 'landing' && (
         <div className="min-h-screen bg-brand-bg">
-          <Header onCTAClick={openForm} />
+          <Header />
           <Hero onCTAClick={openForm} />
           <HowItWorks />
           <Occasions onCTAClick={openForm} />
@@ -31,15 +31,15 @@ export default function App() {
           <CTASection onCTAClick={openForm} />
           <Footer />
 
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-sm px-5 md:hidden">
+          <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 w-full max-w-xs px-5 md:hidden">
             <button
               onClick={openForm}
-              className="w-full bg-gradient-warm text-white font-bold rounded-2xl py-4 text-base
+              className="w-full bg-gradient-warm text-white font-semibold rounded-xl py-3 text-sm
                 shadow-warm-lg hover:shadow-warm active:scale-[0.97] transition-all duration-200
                 flex items-center justify-center gap-2"
             >
               <span>🎵</span>
-              Crear mi canción personalizada
+              Crear mi canción
             </button>
           </div>
         </div>

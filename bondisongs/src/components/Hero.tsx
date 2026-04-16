@@ -1,11 +1,12 @@
-import { Play, ArrowDown } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import PhoneMockup from './PhoneMockup';
+import CountdownBadge from './CountdownBadge';
 
 interface HeroProps {
   onCTAClick: () => void;
 }
 
-export default function Hero({ onCTAClick }: HeroProps) {
+export default function Hero({ onCTAClick: _unused }: HeroProps) {
   return (
     <section className="relative min-h-screen bg-brand-bg overflow-hidden pt-16">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -23,7 +24,11 @@ export default function Hero({ onCTAClick }: HeroProps) {
         />
       </div>
 
-      <div className="relative max-w-lg mx-auto px-5 pt-12 pb-20">
+      <div className="relative max-w-lg mx-auto px-5 pt-8 pb-20">
+
+        <div className="animate-[fadeUp_0.5s_ease-out_0.1s_both] mb-8">
+          <PhoneMockup />
+        </div>
 
         <h1 className="text-4xl font-black leading-[1.1] text-brand-text mb-4 animate-[fadeUp_0.5s_ease-out_0.2s_both]">
           Una canción única{' '}
@@ -31,29 +36,20 @@ export default function Hero({ onCTAClick }: HeroProps) {
           <span className="text-gradient">único</span>
         </h1>
 
-        <p className="text-lg text-brand-muted leading-relaxed mb-8 animate-[fadeUp_0.5s_ease-out_0.3s_both]">
+        <p className="text-lg text-brand-muted leading-relaxed mb-6 animate-[fadeUp_0.5s_ease-out_0.3s_both]">
           Transformamos sus recuerdos, nombre y personalidad en una canción que emocionará a toda la familia.
           El regalo más especial que van a escuchar toda la vida.
         </p>
 
-        <div className="flex flex-col gap-3 mb-10 animate-[fadeUp_0.5s_ease-out_0.4s_both]">
-          <button
-            onClick={onCTAClick}
-            className="btn-primary flex items-center justify-center gap-3 w-full text-lg py-5"
-          >
-            <Play size={20} className="fill-white" />
-            Crear mi canción personalizada
-          </button>
-          <p className="text-center text-sm text-brand-muted">
-            Te va a llevar menos de 3 minutos — sin tarjeta, sin complicaciones
-          </p>
+        <div className="animate-[fadeUp_0.5s_ease-out_0.4s_both] mb-4">
+          <CountdownBadge />
         </div>
 
-        <div className="animate-[fadeUp_0.5s_ease-out_0.5s_both]">
-          <PhoneMockup />
-        </div>
+        <p className="text-center text-sm text-brand-muted animate-[fadeUp_0.5s_ease-out_0.45s_both]">
+          Te va a llevar menos de 3 minutos — sin tarjeta, sin complicaciones
+        </p>
 
-        <div className="flex justify-center mt-10 animate-[fadeUp_0.5s_ease-out_0.7s_both]">
+        <div className="flex justify-center mt-10 animate-[fadeUp_0.5s_ease-out_0.5s_both]">
           <a
             href="#como-funciona"
             className="flex flex-col items-center gap-1 text-brand-muted/60 hover:text-brand-muted transition-colors"
