@@ -6,8 +6,8 @@ const FEATURES = [
   },
   {
     icon: '🎤',
-    title: 'Con el nombre y la historia de tu hijo/a',
-    desc: 'El nombre del nene, sus gustos, sus personas favoritas. Todo puede estar en la canción.',
+    title: 'Con el nombre y la historia de tu amigo/a, hijo/a, o quien desees',
+    desc: 'El nombre de esta persona, sus gustos, sus personas favoritas. Todo puede estar en la canción.',
   },
   {
     icon: '📲',
