@@ -2,7 +2,7 @@ const STEPS = [
   {
     icon: '✍️',
     number: '01',
-    title: 'Contanos sobre el niño o niña',
+    title: 'Contanos sobre esa persona',
     desc: 'Su nombre, sus gustos, un recuerdo especial. Con eso ya podemos crear algo hermoso.',
   },
   {
