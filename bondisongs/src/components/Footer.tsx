@@ -14,8 +14,8 @@ export default function Footer() {
         </div>
 
         <p className="text-sm leading-relaxed mb-4 text-white/50">
-          Canciones personalizadas para niños, creadas con amor a partir de recuerdos reales.
-          Cada canción es única, como ellos.
+          Canciones personalizadas para familiares, niños, niñas, amigos, amigas, para quien quieras,  creadas con amor a partir de recuerdos reales.
+          Cada canción es única, como ellos y ellas, como vos.
         </p>
 
         <a
