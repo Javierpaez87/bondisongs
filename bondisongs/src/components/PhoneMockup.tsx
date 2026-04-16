@@ -20,7 +20,7 @@ export default function PhoneMockup() {
     <div className="relative mx-auto" style={{ maxWidth: 280 }}>
       <audio
         ref={audioRef}
-        src="/audio/Clemente_y_Kimun"
+        src="/audio/Clemente_y_Kimun.mp3"
         onEnded={() => setPlaying(false)}
       />
 
