@@ -11,7 +11,7 @@ export default function StepRecipient({ data, onChange }: Props) {
       <div className="text-center pb-2">
         <div className="text-4xl mb-3">👦</div>
         <h2 className="text-2xl font-black text-brand-text">¿Para quién es la canción?</h2>
-        <p className="text-brand-muted text-sm mt-1">Contanos sobre esta persona/p>
+        <p className="text-brand-muted text-sm mt-1">Contanos sobre esta persona</p>
       </div>
 
       <div>
