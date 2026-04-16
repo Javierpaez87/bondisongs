@@ -1,11 +1,29 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Play, Pause, Heart, Lock, Music2 } from 'lucide-react';
 
 export default function PhoneMockup() {
   const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    if (playing) {
+      audioRef.current.pause();
+      setPlaying(false);
+    } else {
+      audioRef.current.play();
+      setPlaying(true);
+    }
+  };
 
   return (
     <div className="relative mx-auto" style={{ maxWidth: 280 }}>
+      <audio
+        ref={audioRef}
+        src="/audio/Clemente_y_Kimun"
+        onEnded={() => setPlaying(false)}
+      />
+
       <div
         className="relative bg-white rounded-[2.5rem] shadow-warm-lg border-4 border-brand-border/60 overflow-hidden mx-auto"
         style={{ aspectRatio: '9/16', maxWidth: 260 }}
@@ -24,9 +42,9 @@ export default function PhoneMockup() {
               BondiSongs
             </div>
             <div className="font-black text-xl text-brand-text leading-tight">
-              La canción de Mía
+              La canción de Clemente y Kimun
             </div>
-            <div className="text-sm text-brand-muted mt-1">Para su cumple de 5 años</div>
+            <div className="text-sm text-brand-muted mt-1">Un regalo especial</div>
           </div>
 
           <div className="bg-brand-surface rounded-2xl p-3 mb-4">
@@ -56,7 +74,7 @@ export default function PhoneMockup() {
               <Heart size={20} />
             </button>
             <button
-              onClick={() => setPlaying(!playing)}
+              onClick={togglePlay}
               className="w-14 h-14 bg-gradient-warm rounded-full flex items-center justify-center shadow-warm active:scale-95 transition-transform"
             >
               {playing ? (
@@ -90,7 +108,7 @@ export default function PhoneMockup() {
           <span className="text-base">🥲</span>
           <div>
             <div className="text-xs font-bold text-brand-text">¡Me hizo llorar!</div>
-            <div className="text-xs text-brand-muted">Ana · mamá de Mía</div>
+            <div className="text-xs text-brand-muted">María · mamá de Clemente</div>
           </div>
         </div>
       </div>

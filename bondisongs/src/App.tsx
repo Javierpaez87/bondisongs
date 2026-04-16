@@ -4,7 +4,6 @@ import Hero from './components/Hero';
 import HowItWorks from './components/HowItWorks';
 import Occasions from './components/Occasions';
 import Features from './components/Features';
-import Testimonials from './components/Testimonials';
 import CTASection from './components/CTASection';
 import Footer from './components/Footer';
 import FormWizard from './components/form/FormWizard';
@@ -29,7 +28,6 @@ export default function App() {
           <HowItWorks />
           <Occasions onCTAClick={openForm} />
           <Features />
-          <Testimonials />
           <CTASection onCTAClick={openForm} />
           <Footer />
 

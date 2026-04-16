@@ -1,4 +1,4 @@
-import { Play, Star, ArrowDown } from 'lucide-react';
+import { Play, ArrowDown } from 'lucide-react';
 import PhoneMockup from './PhoneMockup';
 
 interface HeroProps {
@@ -24,19 +24,6 @@ export default function Hero({ onCTAClick }: HeroProps) {
       </div>
 
       <div className="relative max-w-lg mx-auto px-5 pt-12 pb-20">
-        <div className="flex items-center gap-2 mb-6 animate-[fadeUp_0.5s_ease-out_0.1s_both]">
-          <div className="flex -space-x-1">
-            {['bg-brand-primary', 'bg-brand-secondary', 'bg-brand-accent'].map((c, i) => (
-              <div key={i} className={`w-5 h-5 ${c} rounded-full border-2 border-white`} />
-            ))}
-          </div>
-          <div className="flex items-center gap-1 bg-white rounded-full px-3 py-1 shadow-card border border-brand-border/40">
-            {[1,2,3,4,5].map(i => (
-              <Star key={i} size={10} className="text-brand-secondary fill-brand-secondary" />
-            ))}
-            <span className="text-xs font-semibold text-brand-text ml-1">+500 familias felices</span>
-          </div>
-        </div>
 
         <h1 className="text-4xl font-black leading-[1.1] text-brand-text mb-4 animate-[fadeUp_0.5s_ease-out_0.2s_both]">
           Una canción única{' '}
