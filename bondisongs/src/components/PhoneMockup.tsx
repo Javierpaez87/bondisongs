@@ -5,14 +5,18 @@ export default function PhoneMockup() {
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     if (!audioRef.current) return;
     if (playing) {
       audioRef.current.pause();
       setPlaying(false);
     } else {
-      audioRef.current.play();
-      setPlaying(true);
+      try {
+        await audioRef.current.play();
+        setPlaying(true);
+      } catch {
+        setPlaying(false);
+      }
     }
   };
 
@@ -20,9 +24,13 @@ export default function PhoneMockup() {
     <div className="relative mx-auto" style={{ maxWidth: 280 }}>
       <audio
         ref={audioRef}
-        src="/audio/Clemente_y_Kimun.mp3"
+        preload="metadata"
         onEnded={() => setPlaying(false)}
-      />
+        onPause={() => setPlaying(false)}
+        onPlay={() => setPlaying(true)}
+      >
+        <source src="/audio/Clemente_y_Kimun.mp3" type="audio/mpeg" />
+      </audio>
 
       <div
         className="relative bg-white rounded-[2.5rem] shadow-warm-lg border-4 border-brand-border/60 overflow-hidden mx-auto"
