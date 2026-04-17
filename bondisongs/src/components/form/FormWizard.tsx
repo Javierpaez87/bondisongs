@@ -75,6 +75,32 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
         status: 'pending',
       });
       if (dbError) throw dbError;
+
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      fetch(`${supabaseUrl}/functions/v1/notify-new-order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+        },
+        body: JSON.stringify({
+          child_name: data.childName,
+          nickname: data.nickname,
+          age_or_birthday: data.ageOrBirthday,
+          name_in_song: data.nameInSong,
+          occasion: data.occasion === 'other' && data.occasionOther ? data.occasionOther : data.occasion,
+          interests: data.interests,
+          memory_text: data.memoryText,
+          important_people: data.importantPeople,
+          music_style: data.musicStyle,
+          instruments: data.instruments,
+          adult_name: data.adultName,
+          whatsapp: data.whatsapp,
+          email: data.email,
+        }),
+      }).catch(() => {});
+
       onSuccess();
     } catch {
       setError('Hubo un problema al enviar tu pedido. Por favor intentá de nuevo.');
