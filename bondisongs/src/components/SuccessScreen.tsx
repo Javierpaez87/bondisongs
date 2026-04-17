@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle, Music2 } from 'lucide-react';
+import { CircleCheck as CheckCircle, Music2 } from 'lucide-react';
 
 interface SuccessScreenProps {
   onClose: () => void;
@@ -45,22 +45,26 @@ export default function SuccessScreen({ onClose }: SuccessScreenProps) {
           {[
             { icon: '💬', text: 'Te escribimos por WhatsApp pronto' },
             { icon: '🎵', text: 'Creamos tu canción personalizada' },
-            { icon: '🔗', text: 'Te enviamos el link privado para escucharla' },
-            { icon: '⬇️', text: 'La descargás y la tenés para siempre' },
+            { icon: '🔗', text: 'Te enviamos el link privado para escucharla. Si te gusta, abonas.' },
+            { icon: '⬇️', text: 'La descargás y la tenés para siempre. Es tuya.' },
           ].map((item, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-brand-surface rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+            <div key={i} className="flex items-start gap-3">
+              <div className="w-9 h-9 bg-brand-surface rounded-xl flex items-center justify-center text-lg flex-shrink-0 mt-0.5">
                 {item.icon}
               </div>
-              <span className="text-sm font-medium text-brand-text">{item.text}</span>
+              <span className="text-sm font-medium text-brand-text leading-relaxed">{item.text}</span>
             </div>
           ))}
         </div>
 
-        <div className="bg-brand-secondary-light border border-brand-secondary/30 rounded-3xl p-4 mb-6">
+        <div className="bg-brand-secondary-light border border-brand-secondary/30 rounded-3xl p-4 mb-6 space-y-2">
           <p className="text-sm text-brand-text leading-relaxed">
             <span className="font-bold">Tiempo de entrega:</span> generalmente entre 24 y 48 horas.
             Te avisamos en cuanto esté lista.
+          </p>
+          <p className="text-sm text-brand-text leading-relaxed">
+            <span className="font-bold">Precio:</span> $15.000 pesos.{' '}
+            <span className="text-brand-primary font-semibold">Abonas solo si te gusta la canción.</span>
           </p>
         </div>
 

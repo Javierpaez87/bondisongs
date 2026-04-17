@@ -15,7 +15,10 @@ export default function StepRecipient({ data, onChange }: Props) {
       </div>
 
       <div>
-        <label className="label-field">Nombre esta persona especial*</label>
+        <label className="label-field">
+          Nombre de esta persona especial{' '}
+          <span className="font-normal text-brand-muted">(opcional)</span>
+        </label>
         <input
           type="text"
           className="input-field"

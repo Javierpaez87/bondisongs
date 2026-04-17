@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, ChevronLeft, ArrowRight, Loader2 } from 'lucide-react';
+import { X, ChevronLeft, ArrowRight, Loader as Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { SongRequestForm, defaultFormData } from '../../lib/types';
 import ProgressBar from './ProgressBar';
@@ -34,11 +34,12 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
     setData(prev => ({ ...prev, ...updates }));
   };
 
+  const isValidWhatsApp = (raw: string) => raw.replace(/\D/g, '').length >= 8;
+
   const canProceed = (): boolean => {
-    if (step === 1) return data.childName.trim().length > 0;
     if (step === 2) return data.occasion.length > 0;
     if (step === 6) return data.musicStyle.length > 0;
-    if (step === 7) return data.adultName.trim().length > 0 && data.whatsapp.trim().length > 0;
+    if (step === 7) return data.adultName.trim().length > 0 && isValidWhatsApp(data.whatsapp);
     return true;
   };
 
@@ -62,11 +63,12 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
         nickname: data.nickname,
         age_or_birthday: data.ageOrBirthday,
         name_in_song: data.nameInSong,
-        occasion: data.occasion,
+        occasion: data.occasion === 'other' && data.occasionOther ? data.occasionOther : data.occasion,
         interests: data.interests,
         memory_text: data.memoryText,
         important_people: data.importantPeople,
         music_style: data.musicStyle,
+        instruments: data.instruments,
         adult_name: data.adultName,
         whatsapp: data.whatsapp,
         email: data.email,

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { SongRequestForm } from '../../../lib/types';
 
 interface Props {
@@ -5,14 +6,25 @@ interface Props {
   onChange: (updates: Partial<SongRequestForm>) => void;
 }
 
+function isValidWhatsApp(raw: string): boolean {
+  const digits = raw.replace(/\D/g, '');
+  return digits.length >= 8 && digits.length <= 15;
+}
+
 export default function StepContact({ data, onChange }: Props) {
+  const [phoneTouched, setPhoneTouched] = useState(false);
+
+  const phoneError = phoneTouched && data.whatsapp.trim().length > 0 && !isValidWhatsApp(data.whatsapp)
+    ? 'Ingresá un número válido (ej: 11 1234-5678) para que podamos enviarte la canción por WhatsApp'
+    : '';
+
   return (
     <div className="space-y-5">
       <div className="text-center pb-2">
         <div className="text-4xl mb-3">📲</div>
         <h2 className="text-2xl font-black text-brand-text">¿Cómo te contactamos?</h2>
         <p className="text-brand-muted text-sm mt-1">
-          Te avisamos por WhatsApp cuando tu canción esté lista
+          Te enviamos la canción por WhatsApp cuando esté lista
         </p>
       </div>
 
@@ -31,21 +43,26 @@ export default function StepContact({ data, onChange }: Props) {
       <div>
         <label className="label-field">WhatsApp *</label>
         <div className="relative">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted font-medium text-base">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted font-medium text-base select-none">
             +54
           </div>
           <input
             type="tel"
-            className="input-field pl-14"
+            className={`input-field pl-14 ${phoneError ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : ''}`}
             placeholder="11 1234-5678"
             value={data.whatsapp}
             onChange={e => onChange({ whatsapp: e.target.value })}
+            onBlur={() => setPhoneTouched(true)}
             autoComplete="tel"
           />
         </div>
-        <p className="text-xs text-brand-muted mt-1.5">
-          Te enviamos el link de la canción por acá. Nada de spam, prometido.
-        </p>
+        {phoneError ? (
+          <p className="text-xs text-red-500 mt-1.5 font-medium">{phoneError}</p>
+        ) : (
+          <p className="text-xs text-brand-muted mt-1.5">
+            Te mandamos el link de la canción por acá. Es obligatorio para confirmar tu pedido.
+          </p>
+        )}
       </div>
 
       <div>
@@ -61,6 +78,9 @@ export default function StepContact({ data, onChange }: Props) {
           onChange={e => onChange({ email: e.target.value })}
           autoComplete="email"
         />
+        <p className="text-xs text-brand-muted mt-1.5">
+          Si lo completás, te enviamos también la confirmación del pedido por email.
+        </p>
       </div>
 
       <div className="bg-brand-surface rounded-2xl p-4 border border-brand-border">
