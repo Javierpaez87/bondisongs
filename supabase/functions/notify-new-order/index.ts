@@ -7,7 +7,8 @@ const corsHeaders = {
 };
 
 const NOTIFICATION_EMAIL = "javierpaezbondiapps@gmail.com";
-const FROM_EMAIL = "BondiSongs <bondisongs@bondiapps.com>";
+const FROM_EMAIL = "🎵 BondiSongs <bondisongs@bondiapps.com>";
+const REPLY_TO = "javierpaezbondiapps@gmail.com";
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -150,6 +151,7 @@ Deno.serve(async (req: Request) => {
       body: JSON.stringify({
         from: FROM_EMAIL,
         to: [NOTIFICATION_EMAIL],
+        reply_to: REPLY_TO,
         subject: `Nuevo pedido: cancion para ${order.child_name ?? "un nino"}`,
         html: adminHtmlBody,
       }),
@@ -167,6 +169,7 @@ Deno.serve(async (req: Request) => {
         body: JSON.stringify({
           from: FROM_EMAIL,
           to: [order.email],
+          reply_to: REPLY_TO,
           subject: `¡Recibimos el pedido de la canción para ${order.child_name ?? "tu peque"}! 🎵`,
           html: customerHtmlBody,
         }),
