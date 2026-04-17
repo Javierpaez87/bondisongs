@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CircleCheck as CheckCircle, Music2 } from 'lucide-react';
+import { CircleCheck as CheckCircle2, Music2 } from 'lucide-react';
 
 interface SuccessScreenProps {
   onClose: () => void;
@@ -26,7 +26,7 @@ export default function SuccessScreen({ onClose }: SuccessScreenProps) {
       >
         <div className="relative inline-flex mb-6">
           <div className="w-24 h-24 bg-gradient-warm rounded-full flex items-center justify-center shadow-warm-lg">
-            <CheckCircle size={40} className="text-white" strokeWidth={2} />
+            <CheckCircle2 size={40} className="text-white" strokeWidth={2} />
           </div>
           <div className="absolute -top-2 -right-2 text-2xl animate-bounce">🎵</div>
           <div className="absolute -bottom-1 -left-3 text-xl animate-bounce" style={{ animationDelay: '0.2s' }}>✨</div>
