@@ -270,7 +270,7 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
         desired_duration: getDesiredDuration(),
       };
 
-      const { error: dbError } = await supabase.from('song_requests').insert(payload);
+      const { error: dbError } = await supabase.rpc('insert_song_request', { payload });
       if (dbError) throw dbError;
 
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
