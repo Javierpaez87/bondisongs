@@ -10,6 +10,14 @@ const NOTIFICATION_EMAIL = "javierpaezbondiapps@gmail.com";
 const FROM_EMAIL = "🎵 BondiSongs <bondisongs@bondiapps.com>";
 const REPLY_TO = "javierpaezbondiapps@gmail.com";
 
+const CATEGORY_LABELS: Record<string, string> = {
+  education: "Educacion",
+  parenting: "Parenting / Crianza",
+  birthday: "Cumpleanos / Regalos",
+  friends: "Amigos / Amigas",
+  other: "Otros",
+};
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 200, headers: corsHeaders });
@@ -18,24 +26,33 @@ Deno.serve(async (req: Request) => {
   try {
     const order = await req.json();
 
+    const category = order.category ?? "birthday";
+    const categoryLabel = CATEGORY_LABELS[category] ?? category;
+
     const occasionMap: Record<string, string> = {
-      birthday: "Cumpleaños",
+      birthday: "Cumpleanos",
       christmas: "Navidad",
-      "new-year": "Año Nuevo",
-      graduation: "Graduación",
-      "get-well": "Recuperación",
+      "new-year": "Ano Nuevo",
+      graduation: "Graduacion",
+      "get-well": "Recuperacion",
       "just-because": "Sin motivo especial",
       other: "Otro",
     };
 
     const styleMap: Record<string, string> = {
-      fun: "Divertido y animado",
-      calm: "Tranquilo y suave",
-      pop: "Pop moderno",
-      rock: "Rock",
-      folk: "Folk / acústico",
-      cumbia: "Cumbia",
-      reggaeton: "Reggaetón",
+      fun: "Alegre y divertida",
+      sweet: "Dulce y tierna",
+      sleep: "Suave para dormir",
+      acoustic: "Acustica / Fogon",
+      surprise: "Sorprendeme",
+      dance: "Movida / Bailable",
+      pop: "Pop moderna",
+      folk: "Folk / Campestre",
+      emotional: "Emotiva / Profunda",
+      softrock: "Rock suave",
+      fantasy: "Fantasia / Magica",
+      adventure: "Aventura / Viaje",
+      funny: "Divertida / Graciosa",
     };
 
     const occasionLabel = occasionMap[order.occasion] ?? order.occasion;
@@ -45,11 +62,87 @@ Deno.serve(async (req: Request) => {
       ? order.instruments.join(", ")
       : "No especificado";
 
+    const lyricsPrompt = order.lyrics_prompt ?? "";
+    const stylePrompt = order.style_prompt ?? "";
+    const wordsToAvoid = order.words_to_avoid ?? "";
+    const desiredDuration = order.desired_duration ?? "";
+
+    let categorySpecificHtml = "";
+
+    if (category === "education" && order.education_data) {
+      const ed = order.education_data;
+      categorySpecificHtml = `
+        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #eee;">
+          <h2 style="font-size: 16px; color: #f97316; margin: 0 0 16px;">Datos educativos</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <tr><td style="padding: 6px 0; color: #999; width: 40%;">Nivel</td><td style="font-weight: bold; color: #1a1a2e;">${ed.educationLevel ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Edad estudiantes</td><td style="font-weight: bold; color: #1a1a2e;">${ed.studentAge || "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Tema</td><td style="font-weight: bold; color: #1a1a2e;">${ed.topic ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Objetivo</td><td style="font-weight: bold; color: #1a1a2e;">${ed.objective ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Tono</td><td style="font-weight: bold; color: #1a1a2e;">${ed.tone ?? "-"}</td></tr>
+            ${ed.wordsToInclude ? `<tr><td style="padding: 6px 0; color: #999;">Palabras a incluir</td><td style="font-weight: bold; color: #1a1a2e;">${ed.wordsToInclude}</td></tr>` : ""}
+            ${ed.additionalInfo ? `<tr><td style="padding: 6px 0; color: #999;">Info adicional</td><td style="font-weight: bold; color: #1a1a2e;">${ed.additionalInfo}</td></tr>` : ""}
+          </table>
+        </div>
+      `;
+    } else if (category === "parenting" && order.parenting_data) {
+      const p = order.parenting_data;
+      categorySpecificHtml = `
+        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #eee;">
+          <h2 style="font-size: 16px; color: #f97316; margin: 0 0 16px;">Datos crianza</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            ${p.childNameParenting ? `<tr><td style="padding: 6px 0; color: #999; width: 40%;">Nombre</td><td style="font-weight: bold; color: #1a1a2e;">${p.childNameParenting}</td></tr>` : ""}
+            ${p.childAge ? `<tr><td style="padding: 6px 0; color: #999;">Edad</td><td style="font-weight: bold; color: #1a1a2e;">${p.childAge}</td></tr>` : ""}
+            <tr><td style="padding: 6px 0; color: #999;">Objetivo</td><td style="font-weight: bold; color: #1a1a2e;">${p.parentingObjective === "otro" && p.parentingObjectiveOther ? p.parentingObjectiveOther : p.parentingObjective ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Tono</td><td style="font-weight: bold; color: #1a1a2e;">${p.tone ?? "-"}</td></tr>
+            ${p.situation ? `<tr><td style="padding: 6px 0; color: #999;">Situacion</td><td style="font-weight: bold; color: #1a1a2e;">${p.situation}</td></tr>` : ""}
+            ${p.familiarPhrases ? `<tr><td style="padding: 6px 0; color: #999;">Frases familiares</td><td style="font-weight: bold; color: #1a1a2e;">${p.familiarPhrases}</td></tr>` : ""}
+            ${p.additionalInfo ? `<tr><td style="padding: 6px 0; color: #999;">Info adicional</td><td style="font-weight: bold; color: #1a1a2e;">${p.additionalInfo}</td></tr>` : ""}
+          </table>
+        </div>
+      `;
+    } else if (category === "friends" && order.friends_data) {
+      const f = order.friends_data;
+      categorySpecificHtml = `
+        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #eee;">
+          <h2 style="font-size: 16px; color: #f97316; margin: 0 0 16px;">Datos amigos</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <tr><td style="padding: 6px 0; color: #999; width: 40%;">Grupo</td><td style="font-weight: bold; color: #1a1a2e;">${f.groupName ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Tipo</td><td style="font-weight: bold; color: #1a1a2e;">${f.friendsSongType === "otro" && f.friendsSongTypeOther ? f.friendsSongTypeOther : f.friendsSongType ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Tono</td><td style="font-weight: bold; color: #1a1a2e;">${f.tone ?? "-"}</td></tr>
+            ${f.groupHistory ? `<tr><td style="padding: 6px 0; color: #999;">Historia</td><td style="font-weight: bold; color: #1a1a2e;">${f.groupHistory}</td></tr>` : ""}
+            ${f.insideJokes ? `<tr><td style="padding: 6px 0; color: #999;">Chistes internos</td><td style="font-weight: bold; color: #1a1a2e;">${f.insideJokes}</td></tr>` : ""}
+            ${f.memorableMoments ? `<tr><td style="padding: 6px 0; color: #999;">Momentos</td><td style="font-weight: bold; color: #1a1a2e;">${f.memorableMoments}</td></tr>` : ""}
+            ${f.personalities ? `<tr><td style="padding: 6px 0; color: #999;">Personalidades</td><td style="font-weight: bold; color: #1a1a2e;">${f.personalities}</td></tr>` : ""}
+            ${f.additionalInfo ? `<tr><td style="padding: 6px 0; color: #999;">Info adicional</td><td style="font-weight: bold; color: #1a1a2e;">${f.additionalInfo}</td></tr>` : ""}
+          </table>
+        </div>
+      `;
+    } else if (category === "other" && order.other_data) {
+      const o = order.other_data;
+      categorySpecificHtml = `
+        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #eee;">
+          <h2 style="font-size: 16px; color: #f97316; margin: 0 0 16px;">Datos personalizados</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <tr><td style="padding: 6px 0; color: #999; width: 40%;">Tipo de cancion</td><td style="font-weight: bold; color: #1a1a2e;">${o.songType ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Para quien</td><td style="font-weight: bold; color: #1a1a2e;">${o.songTarget ?? "-"}</td></tr>
+            ${o.context ? `<tr><td style="padding: 6px 0; color: #999;">Contexto</td><td style="font-weight: bold; color: #1a1a2e;">${o.context}</td></tr>` : ""}
+            ${o.tone ? `<tr><td style="padding: 6px 0; color: #999;">Tono</td><td style="font-weight: bold; color: #1a1a2e;">${o.tone}</td></tr>` : ""}
+            ${o.importantDetails ? `<tr><td style="padding: 6px 0; color: #999;">Detalles</td><td style="font-weight: bold; color: #1a1a2e;">${o.importantDetails}</td></tr>` : ""}
+            ${o.additionalInfo ? `<tr><td style="padding: 6px 0; color: #999;">Info adicional</td><td style="font-weight: bold; color: #1a1a2e;">${o.additionalInfo}</td></tr>` : ""}
+          </table>
+        </div>
+      `;
+    }
+
+    const stylePromptData = order.style_prompt_data ?? {};
+
     const adminHtmlBody = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 24px; border-radius: 12px;">
         <h1 style="color: #1a1a2e; font-size: 22px; margin-bottom: 4px;">Nuevo pedido de cancion 🎵</h1>
-        <p style="color: #666; font-size: 14px; margin-bottom: 24px;">BondiSongs - ${new Date().toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires" })}</p>
+        <p style="color: #666; font-size: 14px; margin-bottom: 24px;">BondiSongs - ${new Date().toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires" })} - <strong>${categoryLabel}</strong></p>
 
+        ${category === "birthday" ? `
         <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #eee;">
           <h2 style="font-size: 16px; color: #f97316; margin: 0 0 16px;">Sobre el nino/a</h2>
           <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
@@ -83,6 +176,48 @@ Deno.serve(async (req: Request) => {
           <p style="font-size: 14px; color: #444;">${order.important_people}</p>
         </div>
         ` : ""}
+        ` : categorySpecificHtml}
+
+        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #eee;">
+          <h2 style="font-size: 16px; color: #f97316; margin: 0 0 16px;">Estilo de sonido</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <tr><td style="padding: 6px 0; color: #999; width: 40%;">Estilo musical</td><td style="font-weight: bold; color: #1a1a2e;">${styleLabel}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Instrumentos</td><td style="font-weight: bold; color: #1a1a2e;">${instruments}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Energia</td><td style="font-weight: bold; color: #1a1a2e;">${stylePromptData.energy ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Voz</td><td style="font-weight: bold; color: #1a1a2e;">${stylePromptData.voice ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Mood</td><td style="font-weight: bold; color: #1a1a2e;">${stylePromptData.mood ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Tempo</td><td style="font-weight: bold; color: #1a1a2e;">${stylePromptData.tempo ?? "-"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #999;">Caracter</td><td style="font-weight: bold; color: #1a1a2e;">${stylePromptData.soundCharacter ?? "-"}</td></tr>
+          </table>
+        </div>
+
+        ${wordsToAvoid ? `
+        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #eee;">
+          <h2 style="font-size: 16px; color: #f97316; margin: 0 0 8px;">Evitar</h2>
+          <p style="font-size: 14px; color: #444;">${wordsToAvoid}</p>
+        </div>
+        ` : ""}
+
+        ${desiredDuration ? `
+        <div style="background: white; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #eee;">
+          <h2 style="font-size: 16px; color: #f97316; margin: 0 0 8px;">Duracion deseada</h2>
+          <p style="font-size: 14px; color: #444;">${desiredDuration}</p>
+        </div>
+        ` : ""}
+
+        ${lyricsPrompt ? `
+        <div style="background: #f0fff4; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #22c55e;">
+          <h2 style="font-size: 16px; color: #16a34a; margin: 0 0 8px;">Prompt LETRA</h2>
+          <pre style="font-size: 13px; color: #333; white-space: pre-wrap; font-family: monospace; line-height: 1.6;">${lyricsPrompt}</pre>
+        </div>
+        ` : ""}
+
+        ${stylePrompt ? `
+        <div style="background: #eff6ff; border-radius: 10px; padding: 20px; margin-bottom: 16px; border: 1px solid #3b82f6;">
+          <h2 style="font-size: 16px; color: #2563eb; margin: 0 0 8px;">Prompt ESTILO MUSICAL</h2>
+          <pre style="font-size: 13px; color: #333; white-space: pre-wrap; font-family: monospace; line-height: 1.6;">${stylePrompt}</pre>
+        </div>
+        ` : ""}
 
         <div style="background: #fff8f0; border-radius: 10px; padding: 20px; border: 1px solid #f97316;">
           <h2 style="font-size: 16px; color: #f97316; margin: 0 0 16px;">Contacto</h2>
@@ -95,35 +230,41 @@ Deno.serve(async (req: Request) => {
       </div>
     `;
 
+    const recipientName = category === "birthday" ? (order.child_name ?? "tu peque") :
+                          category === "parenting" ? (order.parenting_data?.childNameParenting ?? "tu peque") :
+                          category === "friends" ? (order.friends_data?.groupName ?? "tu grupo") :
+                          category === "other" ? (order.other_data?.songTarget ?? "tu pedido") :
+                          (order.education_data?.topic ?? "tu pedido");
+
     const customerHtmlBody = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; padding: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
 
         <div style="background: linear-gradient(135deg, #f97316 0%, #fb923c 100%); padding: 40px 32px; text-align: center;">
           <div style="font-size: 48px; margin-bottom: 12px;">🎵</div>
-          <h1 style="color: white; font-size: 26px; font-weight: 900; margin: 0 0 8px;">¡Recibimos tu pedido!</h1>
+          <h1 style="color: white; font-size: 26px; font-weight: 900; margin: 0 0 8px;">Recibimos tu pedido!</h1>
           <p style="color: rgba(255,255,255,0.9); font-size: 15px; margin: 0;">Gracias por confiar en BondiSongs</p>
         </div>
 
         <div style="padding: 32px;">
           <p style="font-size: 16px; color: #333; line-height: 1.6; margin: 0 0 20px;">
-            Hola <strong>${order.adult_name ?? ""}!</strong> 👋
+            Hola <strong>${order.adult_name ?? ""}!</strong>
           </p>
           <p style="font-size: 15px; color: #555; line-height: 1.7; margin: 0 0 20px;">
-            Ya tenemos todo lo que necesitamos para crear la canción de <strong>${order.child_name ?? "tu peque"}</strong>. Estamos procesando tu pedido y en breve nos contactaremos con vos para que puedas escuchar la canción antes de pagar.
+            Ya tenemos todo lo que necesitamos para crear la cancion${category === "birthday" ? ` de <strong>${recipientName}</strong>` : ""}. Estamos procesando tu pedido y en breve nos contactaremos con vos para que puedas escuchar la cancion antes de pagar.
           </p>
 
           <div style="background: #fff8f0; border-left: 4px solid #f97316; border-radius: 8px; padding: 20px; margin: 24px 0;">
-            <p style="font-size: 14px; color: #555; margin: 0 0 8px; font-weight: bold;">¿Cómo funciona?</p>
+            <p style="font-size: 14px; color: #555; margin: 0 0 8px; font-weight: bold;">Como funciona?</p>
             <ol style="font-size: 14px; color: #555; margin: 0; padding-left: 20px; line-height: 1.8;">
-              <li>Creamos la canción personalizada para ${order.child_name ?? "tu peque"}</li>
+              <li>Creamos la cancion personalizada</li>
               <li>Te enviamos un <strong>link de escucha previa</strong> para que la puedas escuchar</li>
-              <li>Solo pagás si estás conforme con el resultado</li>
-              <li>Una vez realizado el pago, te enviamos el archivo con la canción</li>
+              <li>Solo pagas si estas conforme con el resultado</li>
+              <li>Una vez realizado el pago, te enviamos el archivo con la cancion</li>
             </ol>
           </div>
 
           <p style="font-size: 14px; color: #777; line-height: 1.6; margin: 0 0 24px;">
-            Si tenés alguna consulta o duda, no dudes en escribirnos por WhatsApp:
+            Si tenes alguna consulta o duda, no dudes en escribirnos por WhatsApp:
           </p>
 
           <div style="text-align: center; margin: 24px 0;">
@@ -134,7 +275,7 @@ Deno.serve(async (req: Request) => {
           </div>
 
           <p style="font-size: 13px; color: #aaa; text-align: center; margin: 24px 0 0;">
-            Con cariño, el equipo de <strong style="color: #f97316;">BondiSongs</strong> 🎶
+            Con carino, el equipo de <strong style="color: #f97316;">BondiSongs</strong>
           </p>
         </div>
       </div>
@@ -152,7 +293,7 @@ Deno.serve(async (req: Request) => {
         from: FROM_EMAIL,
         to: [NOTIFICATION_EMAIL],
         reply_to: REPLY_TO,
-        subject: `Nuevo pedido: cancion para ${order.child_name ?? "un nino"}`,
+        subject: `[${categoryLabel}] Nuevo pedido: ${recipientName}`,
         html: adminHtmlBody,
       }),
     });
@@ -170,7 +311,7 @@ Deno.serve(async (req: Request) => {
           from: FROM_EMAIL,
           to: [order.email],
           reply_to: REPLY_TO,
-          subject: `¡Recibimos el pedido de la canción para ${order.child_name ?? "tu peque"}! 🎵`,
+          subject: `Recibimos tu pedido de cancion! 🎵`,
           html: customerHtmlBody,
         }),
       });
