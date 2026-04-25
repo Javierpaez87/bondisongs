@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-console.log("BondiSongs build version: edge-submit-only-v2");
+console.log("BondiSongs build version: rpc-submit-v1");
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
