@@ -13,6 +13,7 @@ import {
   StylePromptFields,
 } from '../../lib/types';
 import { generateLyricsPrompt, generateStylePrompt } from '../../lib/promptGenerator';
+import { supabase } from '../../lib/supabase';
 import ProgressBar from './ProgressBar';
 import CategorySelector from './CategorySelector';
 import StepRecipient from './steps/StepRecipient';
@@ -231,7 +232,6 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
     setSubmitting(true);
     setError('');
     try {
-      console.log("SUBMIT FLOW: using edge function submit-song-request");
       const lyricsPrompt = generateLyricsPrompt(unified);
       const stylePromptText = generateStylePrompt(unified);
 
@@ -270,19 +270,11 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
         desired_duration: getDesiredDuration(),
       };
 
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-      const res = await fetch(`${supabaseUrl}/functions/v1/submit-song-request`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-        },
-        body: JSON.stringify(payload),
+      const { data: rpcData, error: rpcError } = await supabase.rpc('insert_song_request', {
+        payload,
       });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Error ${res.status}`);
+      if (rpcError) {
+        throw new Error(rpcError.message || 'Error al guardar el pedido');
       }
 
       onSuccess();
