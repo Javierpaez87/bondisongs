@@ -231,6 +231,7 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
     setSubmitting(true);
     setError('');
     try {
+      console.log("SUBMIT FLOW: using edge function submit-song-request");
       const lyricsPrompt = generateLyricsPrompt(unified);
       const stylePromptText = generateStylePrompt(unified);
 
