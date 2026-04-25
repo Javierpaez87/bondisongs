@@ -238,11 +238,11 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
       const bd = unified.birthday;
       const payload: Record<string, unknown> = {
         category: unified.category,
-        child_name: unified.category === 'birthday' ? bd.childName :
+        child_name: (unified.category === 'birthday' ? bd.childName :
                     unified.category === 'parenting' ? unified.parenting.childNameParenting :
                     unified.category === 'friends' ? unified.friends.groupName :
                     unified.category === 'other' ? unified.other.songTarget :
-                    unified.education.topic,
+                    unified.education.topic) || '',
         nickname: unified.category === 'birthday' ? bd.nickname : '',
         age_or_birthday: unified.category === 'birthday' ? bd.ageOrBirthday :
                          unified.category === 'parenting' ? unified.parenting.childAge : '',
@@ -285,8 +285,9 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
       }).catch(() => {});
 
       onSuccess();
-    } catch {
-      setError('Hubo un problema al enviar tu pedido. Por favor intentá de nuevo.');
+    } catch (err) {
+      const msg = err && typeof err === 'object' && 'message' in err ? (err as { message: string }).message : '';
+      setError('Hubo un problema al enviar tu pedido. Por favor intentá de nuevo.' + (msg ? ` (${msg})` : ''));
     } finally {
       setSubmitting(false);
     }
