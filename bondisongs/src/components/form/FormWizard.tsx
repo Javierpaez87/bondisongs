@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { X, ChevronLeft, ArrowRight, Loader as Loader2 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
 import {
   SongCategory,
   SongRequestForm,
@@ -270,19 +269,20 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
         desired_duration: getDesiredDuration(),
       };
 
-      const { error: dbError } = await supabase.rpc('insert_song_request', { payload });
-      if (dbError) throw dbError;
-
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-      fetch(`${supabaseUrl}/functions/v1/notify-new-order`, {
+      const res = await fetch(`${supabaseUrl}/functions/v1/submit-song-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${supabaseAnonKey}`,
         },
         body: JSON.stringify(payload),
-      }).catch(() => {});
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `Error ${res.status}`);
+      }
 
       onSuccess();
     } catch (err) {
