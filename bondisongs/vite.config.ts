@@ -8,10 +8,10 @@ export default defineConfig({
   },
   define: {
     'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(
-      process.env.VITE_SUPABASE_URL ?? 'https://cvboudtgrjzpcekodebi.supabase.co'
+      process.env.VITE_SUPABASE_URL ?? 'https://twrwhcetxqpokuxfmicm.supabase.co'
     ),
     'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(
-      process.env.VITE_SUPABASE_ANON_KEY ?? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2Ym91ZHRncmp6cGNla29kZWJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzODQyMTEsImV4cCI6MjA5MTk2MDIxMX0.99TbR4gEt34Y_vgMXV8cXZW4BwutGp_MFL94ULf9qPE'
+      process.env.VITE_SUPABASE_ANON_KEY ?? 'sb_publishable_JX8nN_n-xe2ANze3yMP0kg_h5Znt3zY'
     ),
   },
 });
