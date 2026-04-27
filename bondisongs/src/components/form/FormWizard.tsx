@@ -277,6 +277,14 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
         throw new Error(rpcError.message || 'Error al guardar el pedido');
       }
 
+      fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/notify-new-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).catch((err) => {
+        console.error('Email notification failed:', err);
+      });
+
       onSuccess();
     } catch (err) {
       const msg = err && typeof err === 'object' && 'message' in err ? (err as { message: string }).message : '';
