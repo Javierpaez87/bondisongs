@@ -23,8 +23,24 @@ Deno.serve(async (req: Request) => {
     return new Response(null, { status: 200, headers: corsHeaders });
   }
 
+  let order: Record<string, unknown>;
   try {
-    const order = await req.json();
+    const text = await req.text();
+    if (!text || text.trim() === '') {
+      return new Response(JSON.stringify({ error: 'Empty body' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    order = JSON.parse(text);
+  } catch (_) {
+    return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  try {
 
     const category = order.category ?? "birthday";
     const categoryLabel = CATEGORY_LABELS[category] ?? category;

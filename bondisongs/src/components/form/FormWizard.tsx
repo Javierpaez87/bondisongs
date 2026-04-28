@@ -278,7 +278,7 @@ export default function FormWizard({ onClose, onSuccess }: FormWizardProps) {
       }
 
       console.log('notify-new-order payload', payload);
-      fetch('https://twrwhcetxqpokuxfimcm.supabase.co/functions/v1/notify-new-order', {
+      fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/notify-new-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
